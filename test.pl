@@ -61,7 +61,7 @@ if (1) {
 
 # 5 Reset
 if (1) {
-	print "  - reset\n";
+	print "  - reset ";
 	my $c = new Digest::Perl::MD5;
 	$c->add('foo'); $c->reset(); $c->add('bar');
 	ok( $c->hexdigest eq md5_hex('bar') );
@@ -69,7 +69,7 @@ if (1) {
 
 # 5 Cloning
 if (1) {
-	print "  - clone\n";
+	print "  - clone ";
 	my $c = new Digest::Perl::MD5;
 	$c->add('YCarmenY'); my $d = $c->clone(); $c->add('ZKleinZ');
 	# use Data::Dumper; print Dumper($c,$d);
@@ -78,7 +78,7 @@ if (1) {
 
 # 6 Adding
 if (1) {
-	print "  - add\n";
+	print "  - add ";
 	my $c = new Digest::Perl::MD5;
 	my $anz = 256;
 	$c->add($_) for (0..$anz);
@@ -91,7 +91,7 @@ if (1) {
 
 # 7 Addfile
 if (1) {
-	print "  - addfile\n";
+	print "  - addfile ";
 	my $c = new Digest::Perl::MD5;
 	open FILE, './rand.f' or die $!;
 	binmode FILE;
@@ -100,7 +100,19 @@ if (1) {
 	close FILE;
 }
 
-# 8 Speed-Test
+# 8 add_bits
+if (1) {
+	print "  - add_bits ";
+	my $c = new Digest::Perl::MD5;
+	eval { $c->add_bits('', 9) };
+	ok (
+		$@ and 
+		$c->add_bits('011000010110001001100011')->digest eq md5('abc') and
+		$c->add_bits('def', 16)->digest eq md5('de')
+	);
+}
+
+# 9 Speed-Test
 if (1) {
 	print "Speed-Test (please be patient)...\n";
 	my $count = $ENV{MD5_SPEED_TEST} || 50_000;
