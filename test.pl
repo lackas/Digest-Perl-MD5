@@ -5,63 +5,115 @@ use Test;
 use strict;
 use lib './lib';
 
-BEGIN {plan tests => 5}
+BEGIN {plan tests => 7}
 
 use Digest::Perl::MD5 qw(md5 md5_hex md5_base64);
 
 # 1 Testsuite
-print "Trying md5_hex on test suite...\n";
-ok( md5_hex('') eq 'd41d8cd98f00b204e9800998ecf8427e' and
-    md5_hex('a') eq '0cc175b9c0f1b6a831c399e269772661' and
-    md5_hex('abc') eq '900150983cd24fb0d6963f7d28e17f72' and
-    md5_hex('message digest') eq 'f96b697d7cb7938d525a2f31aaf161d0' and
-    md5_hex('abcdefghijklmnopqrstuvwxyz') eq
-    	'c3fcd3d76192e4007dfb496cca67e13b' and
-    md5_hex('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') eq
-    	'd174ab98d277d9f5a5611c2c9f419d9f' and
-    md5_hex('12345678901234567890123456789012345678901234567890123456789012345678901234567890') eq
-    	'57edf4a22be3c955ac49da2e2107b67a'
-);
+if (1) {
+	print "Trying md5_hex on test suite...\n";
+	ok( 
+		md5_hex('') eq 'd41d8cd98f00b204e9800998ecf8427e' and
+		md5_hex('a') eq '0cc175b9c0f1b6a831c399e269772661' and
+		md5_hex('abc') eq '900150983cd24fb0d6963f7d28e17f72' and
+		md5_hex('message digest') eq 'f96b697d7cb7938d525a2f31aaf161d0' and
+		md5_hex('abcdefghijklmnopqrstuvwxyz') eq
+			'c3fcd3d76192e4007dfb496cca67e13b' and
+		md5_hex('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') eq
+			'd174ab98d277d9f5a5611c2c9f419d9f' and
+		md5_hex('12345678901234567890123456789012345678901234567890123456789012345678901234567890') eq
+			'57edf4a22be3c955ac49da2e2107b67a'
+	);
+}
 
 # 2 md5_base64
-print "Trying md5_base64...\n";
-ok ( md5_base64('delta' x 23) eq 'RzlmC2a3rRVNgaZrwusL0Q' and
-     md5_base64('carmen' x 26) eq 'WVM3kMiFLRPPRMOo7DQr2w' and
-     md5_base64('imperia' x 42) eq 'IjqzkaH6J3rDdQWHuiWuXg'
-);
+if (1) {
+	print "Trying md5_base64...\n";
+	ok ( 
+		md5_base64('delta' x 23) eq 'RzlmC2a3rRVNgaZrwusL0Q' and
+		md5_base64('carmen' x 26) eq 'WVM3kMiFLRPPRMOo7DQr2w' and
+		md5_base64('imperia' x 42) eq 'IjqzkaH6J3rDdQWHuiWuXg'
+	);
+}
 
 # 3 d-test:
-print "Running d-test\n";
-my $err;
-while(<DATA>) {
-	chomp;
-	my ($plain,$cipher) = split/:/;
-	$err++ if md5_hex($plain) ne $cipher;
+if (1) {
+	print "Running d-test\n";
+	my $err;
+	while(<DATA>) {
+		chomp;
+		my ($plain,$cipher) = split/:/;
+		$err++ if md5_hex($plain) ne $cipher;
+	}
+	ok(!$err);
 }
-ok(!$err);
 
 # 4 Object
-print "Testing MD5-Object...\n";
-my $c = new Digest::Perl::MD5;
-$c->add('XdeltaX');
-ok( $c->b64digest eq 'hLA/iI1q1iIKz+uffnsN6w' );
-$c->reset;
+if (1) {
+	print "Testing MD5-Object...\n";
+	my $c = new Digest::Perl::MD5;
+	$c->add('XdeltaX');
+	ok(
+		$c->b64digest eq 'hLA/iI1q1iIKz+uffnsN6w' and
+		$c->add('YdeltaY')->hexdigest eq md5_hex('YdeltaY')
+	);
+}
 
-open FILE, './rand.f' or die $!;
-binmode FILE;
-#print $c->addfile(*FILE)->hexdigest,"\n"; # DEBUG
-# 5 Object 2
-ok ( $c->addfile(*FILE)->hexdigest eq '2cc2c8b037522964694985b3f9c88b1e' );
-close FILE;
+# 5 Reset
+if (1) {
+	print "  - reset\n";
+	my $c = new Digest::Perl::MD5;
+	$c->add('foo'); $c->reset(); $c->add('bar');
+	ok( $c->hexdigest eq md5_hex('bar') );
+}
 
-# 6 Speed-Test
-print "Speed-Test (please be patient)...\n";
-my $count = 50_000;
-my $t1 = time;
-for (1..$count) { md5('delta') } # encode 64Byte blocks
-my $t2 = time;
-printf "%d blocks took %ds => %.2f blocks/second.\n",
-       $count, $t2-$t1, $count/($t2-$t1);
+# 5 Cloning
+if (1) {
+	print "  - clone\n";
+	my $c = new Digest::Perl::MD5;
+	$c->add('YCarmenY'); my $d = $c->clone(); $c->add('ZKleinZ');
+	# use Data::Dumper; print Dumper($c,$d);
+	ok ( $c->b64digest eq $d->add('ZKleinZ')->b64digest );
+}
+
+# 6 Adding
+if (1) {
+	print "  - add\n";
+	my $c = new Digest::Perl::MD5;
+	my $anz = 256;
+	$c->add($_) for (0..$anz);
+	my $string = 'x'x35701;
+	ok ( 
+		$c->b64digest eq md5_base64( 0..$anz ) and
+		$c->add($string)->hexdigest eq md5_hex( $string )
+	);
+}
+
+# 7 Addfile
+if (1) {
+	print "  - addfile\n";
+	my $c = new Digest::Perl::MD5;
+	open FILE, './rand.f' or die $!;
+	binmode FILE;
+	# print $c->addfile(*FILE)->clone->hexdigest,"\n"; # DEBUG
+	ok ( $c->addfile(*FILE)->hexdigest eq '2cc2c8b037522964694985b3f9c88b1e' );
+	close FILE;
+}
+
+# 8 Speed-Test
+if (0) {
+	print "Speed-Test (please be patient)...\n";
+	my $count = 10; # 50_000;
+	my $t1 = time;
+	for (1..$count) { md5('delta') } # encode 64Byte blocks
+	my $t2 = time;
+	if ($t1 == $t2) {
+		print "Ok, you computer is fast. Please increase \$count in $0.\n";
+	} else {
+		printf "%d blocks took %ds => %.2f blocks/second.\n",
+		$count, $t2-$t1, $count/($t2-$t1);
+	}
+}
 
 __DATA__
 m:6f8f57715090da2632453988d9a1501b
