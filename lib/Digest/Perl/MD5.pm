@@ -4,6 +4,7 @@
 package Digest::Perl::MD5;
 use strict;
 use integer;
+use Exporter;
 use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 
 @EXPORT_OK = qw(md5 md5_hex md5_base64);
@@ -73,7 +74,7 @@ sub gen_code {
   	my @state; my ($a,$b,$c,$d) = (@state[0..3],my @x) = @_;
 '. $insert .'
 	$state[0]+$a & MAX, $state[1]+$b & MAX, $state[2]+$c & MAX, $state[3]+$d & MAX;
-}';
+  }';
 
 }
 
@@ -178,8 +179,7 @@ hash passwords.
 
 =item
 
-educational purposes (I optimized the code for performance (and now it is really ugly,
-but you find all needed function (F, G, H, I, FF, GG, HH, II, ...) at the end of the source-code).
+educational purposes
 
 =back
 
@@ -224,6 +224,10 @@ easily exchange them, e.g.
 If the C<Digest::MD5> module is available it is used and if not you take
 C<Digest::Perl::MD5>.
 
+You can also install the Perl part of Digest::MD5 together with Digest::Perl::MD5
+and use Digest::MD5 as normal, it falls back to Digest::Perl::MD5 if it
+cannot load its object files.
+
 For a detailed Documentation see the C<Digest::MD5> module.
 
 =head1 EXAMPLES
@@ -232,7 +236,7 @@ The simplest way to use this library is to import the md5_hex()
 function (or one of its cousins):
 
     use Digest::Perl::MD5 'md5_hex';
-    print 'Digest is ', md5_hex 'foobarbaz', "\n";
+    print 'Digest is ', md5_hex('foobarbaz'), "\n";
 
 The above example would print out the message
 
