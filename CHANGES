@@ -1,3 +1,8 @@
+1.7:	Optimisation Release:
+	- increased speed by 17% (on i386, FreeBSD, Perl 5.8.2)
+	- re-enabled speed test (set number of counts with
+	  $ENV{MD5_SPEED_TEST}
+
 1.6:	Reworked OOP Interface:
 	- added reset() and clone() (to be compatible with Digest::MD5)
 	- add() and addfile() now save memory
