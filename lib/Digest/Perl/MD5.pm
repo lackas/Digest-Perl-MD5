@@ -171,6 +171,11 @@ sub addfile {
 }
 
 sub add_bits {
+	my $self = shift;
+	return $self->add( pack 'B*', shift ) if @_ == 1;
+	my ($b,$n) = @_;
+	die __PACKAGE__, " Invalid number of bits\n" if $n%8;
+	$self->add( substr $b, 0, $n/8 )
 }
 
 sub digest {
