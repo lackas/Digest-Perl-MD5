@@ -1,3 +1,9 @@
+1.5:    Don't rely on (1 << 32) being 1 on 32 bit machines.
+	Get rid of ``no integer'' pragma and inline rotate left
+	function.
+	Version 1.5 outperforms version 1.4 approximately by
+	factor 2.
+
 1.4:	Removed obsolete sum() function (hint from Guido Flohr)
 	round() function is now dynamically generated,
 	different code for 32bit and 64bit architechtures.
