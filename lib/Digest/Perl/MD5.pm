@@ -31,7 +31,7 @@ sub padding($) {
 
 sub rotate_left($$) {
 	no integer;
-	$_[0]<<$_[1]|$_[0]>>(32-$_[1]) & MAX;
+	$_[0]<<$_[1]|$_[0]>>(32-$_[1]);
 }
 
 sub gen_code {
@@ -50,7 +50,7 @@ sub gen_code {
   );
   if ( (1 << 32) == 1) { %f = %{$CODES{'32bit'}} }
   else { %f = %{$CODES{'64bit'}} }
-  
+
   my %s = (  # shift lengths
 	S11 => 7, S12 => 12, S13 => 17, S14 => 22, S21 => 5, S22 => 9, S23 => 14,
 	S24 => 20, S31 => 4, S32 => 11, S33 => 16, S34 => 23, S41 => 6, S42 => 10,
@@ -60,6 +60,7 @@ sub gen_code {
   my $insert;
   while(<DATA>) {
 	chomp;
+	next unless /^[FGHI]/;
 	my ($func,@x) = split /,/;
 	my $c = $f{$func};
 	$c =~ s/X(\d)/$x[$1]/g;
@@ -68,7 +69,7 @@ sub gen_code {
   }
   
   eval '
-  sub round($$$$@) {
+  sub round {
   	my @state; my ($a,$b,$c,$d) = (@state[0..3],my @x) = @_;
 '. $insert .'
 	$state[0]+$a & MAX, $state[1]+$b & MAX, $state[2]+$c & MAX, $state[3]+$d & MAX;
@@ -77,7 +78,6 @@ sub gen_code {
 }
 
 gen_code();
-
 
 
 # object part of this module
