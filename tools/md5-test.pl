@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-
+# $Id$
 use strict;
 use lib qw'./lib ../lib';
 use Digest::Perl::MD5;
