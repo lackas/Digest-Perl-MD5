@@ -137,7 +137,8 @@ sub round($$$$@) {
 
 # object part of this module
 sub new {
-	bless {}, shift;
+	my $class = shift;
+	bless {}, ref($class) || $class;
 }
 
 sub reset {
@@ -154,6 +155,10 @@ sub add(@) {
 
 sub addfile {
   	my ($self,$fh) = @_;
+	if (!ref($fh) && ref(\$fh) ne "GLOB") {
+	    require Symbol;
+	    $fh = Symbol::qualify($fh, scalar(caller));
+	}
 	$self->{data} .= do{local$/;<$fh>};
 	$self
 }
@@ -170,8 +175,8 @@ sub b64digest {
 	md5_base64(shift->{data})
 }
 
-sub md5($) {
-	my $message = padding(shift);
+sub md5(@) {
+	my $message = padding(join("", @_));
 	my ($a,$b,$c,$d) = (A,B,C,D);
 	for my $i (0 .. (length $message)/64-1) {
 		my @X = unpack 'V16', substr($message,$i*64,64);	
@@ -181,12 +186,12 @@ sub md5($) {
 }
 
 
-sub md5_hex($) {  
-  unpack 'H*', md5(shift);
+sub md5_hex(@) {  
+  unpack 'H*', &md5;
 }
 
-sub md5_base64($) {
-  encode_base64(md5(shift));
+sub md5_base64(@) {
+  encode_base64(&md5);
 }
 
 
