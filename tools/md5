@@ -3,9 +3,8 @@
 # $Id$
 #
 use strict;
-use lib 'lib';
 my $PP = 0;
-eval { require Digest::MD5x; };
+eval { require Digest::MD5; };
 require Digest::Perl::MD5, $PP = 1 if $@;
 my $ctx = $PP ? Digest::Perl::MD5->new() : Digest::MD5->new();
 
