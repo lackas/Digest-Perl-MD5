@@ -42,101 +42,99 @@ sub rotate_left($$) {
 }
 
 
-my $sum5_003=<<'EOC';
+my $sum5_005003=<<'EOC';
 sub sum {
-	$_[0] += $_[1];
-	while ($_[0] > MAX) {$_[0] -= MAX+1}
-	$_[0];  
+	($_[0] += $_[1]) > MAX ? $_[0] - (MAX+1) : $_[0];
 }
 EOC
 
 my $sum=<<'EOC';
 sub sum {
 	$_[0] += $_[1];
-	while ($_[0] > MAX) {$_[0] -= MAX+1}
-	while ($_[0] < 0) {$_[0] += MAX+1}
+	if ($_[0] > MAX) {$_[0] -= MAX+1}
+	if ($_[0] < 0) {$_[0] += MAX+1}
 	$_[0];  
 }
 EOC
 
 if ($] == 5.00503) {
-	eval $sum5_003;
+	eval $sum5_005003;
 } else {
 	eval $sum
 }
-
 
 sub round($$$$@) {
   my @state;
   my ($a,$b,$c,$d) = (@state[0..3],my @x) = @_;
   use integer;
 
-  $a=sum(rotate_left(sum(($b&$c)|(~$b&$d),$a+$x[ 0]+0xd76aa478),7),$b);	# /* 1 */
-  $d=sum(rotate_left(sum(($a&$b)|(~$a&$c),$d+$x[ 1]+0xe8c7b756),12),$a);	# /* 2 */
-  $c=sum(rotate_left(sum(($d&$a)|(~$d&$b),$c+$x[ 2]+0x242070db),17),$d);	# /* 3 */
-  $b=sum(rotate_left(sum(($c&$d)|(~$c&$a),$b+$x[ 3]+0xc1bdceee),22),$c);	# /* 4 */
-  $a=sum(rotate_left(sum(($b&$c)|(~$b&$d),$a+$x[ 4]+0xf57c0faf),7),$b);	# /* 5 */
-  $d=sum(rotate_left(sum(($a&$b)|(~$a&$c),$d+$x[ 5]+0x4787c62a),12),$a);	# /* 6 */
-  $c=sum(rotate_left(sum(($d&$a)|(~$d&$b),$c+$x[ 6]+0xa8304613),17),$d);	# /* 7 */
-  $b=sum(rotate_left(sum(($c&$d)|(~$c&$a),$b+$x[ 7]+0xfd469501),22),$c);	# /* 8 */
-  $a=sum(rotate_left(sum(($b&$c)|(~$b&$d),$a+$x[ 8]+0x698098d8),7),$b);	# /* 9 */
-  $d=sum(rotate_left(sum(($a&$b)|(~$a&$c),$d+$x[ 9]+0x8b44f7af),12),$a);	# /* 10 */
-  $c=sum(rotate_left(sum(($d&$a)|(~$d&$b),$c+$x[10]+0xffff5bb1),17),$d);	# /* 11 */
-  $b=sum(rotate_left(sum(($c&$d)|(~$c&$a),$b+$x[11]+0x895cd7be),22),$c);	# /* 12 */
-  $a=sum(rotate_left(sum(($b&$c)|(~$b&$d),$a+$x[12]+0x6b901122),7),$b);	# /* 13 */
-  $d=sum(rotate_left(sum(($a&$b)|(~$a&$c),$d+$x[13]+0xfd987193),12),$a);	# /* 14 */
-  $c=sum(rotate_left(sum(($d&$a)|(~$d&$b),$c+$x[14]+0xa679438e),17),$d);	# /* 15 */
-  $b=sum(rotate_left(sum(($c&$d)|(~$c&$a),$b+$x[15]+0x49b40821),22),$c);	# /* 16 */ 
-  $a=sum(rotate_left(sum(($b&$d)|($c&(~$d)),$a+$x[ 1]+0xf61e2562),5),$b);	# /* 17 */
-  $d=sum(rotate_left(sum(($a&$c)|($b&(~$c)),$d+$x[ 6]+0xc040b340),9),$a);	# /* 18 */
-  $c=sum(rotate_left(sum(($d&$b)|($a&(~$b)),$c+$x[11]+0x265e5a51),14),$d);	# /* 19 */
-  $b=sum(rotate_left(sum(($c&$a)|($d&(~$a)),$b+$x[ 0]+0xe9b6c7aa),20),$c);	# /* 20 */
-  $a=sum(rotate_left(sum(($b&$d)|($c&(~$d)),$a+$x[ 5]+0xd62f105d),5),$b);	# /* 21 */
-  $d=sum(rotate_left(sum(($a&$c)|($b&(~$c)),$d+$x[10]+0x2441453),9),$a);	# /* 22 */
-  $c=sum(rotate_left(sum(($d&$b)|($a&(~$b)),$c+$x[15]+0xd8a1e681),14),$d);	# /* 23 */
-  $b=sum(rotate_left(sum(($c&$a)|($d&(~$a)),$b+$x[ 4]+0xe7d3fbc8),20),$c);	# /* 24 */
-  $a=sum(rotate_left(sum(($b&$d)|($c&(~$d)),$a+$x[ 9]+0x21e1cde6),5),$b);	# /* 25 */
-  $d=sum(rotate_left(sum(($a&$c)|($b&(~$c)),$d+$x[14]+0xc33707d6),9),$a);	# /* 26 */
-  $c=sum(rotate_left(sum(($d&$b)|($a&(~$b)),$c+$x[ 3]+0xf4d50d87),14),$d);	# /* 27 */
-  $b=sum(rotate_left(sum(($c&$a)|($d&(~$a)),$b+$x[ 8]+0x455a14ed),20),$c);	# /* 28 */
-  $a=sum(rotate_left(sum(($b&$d)|($c&(~$d)),$a+$x[13]+0xa9e3e905),5),$b);	# /* 29 */
-  $d=sum(rotate_left(sum(($a&$c)|($b&(~$c)),$d+$x[ 2]+0xfcefa3f8),9),$a);	# /* 30 */
-  $c=sum(rotate_left(sum(($d&$b)|($a&(~$b)),$c+$x[ 7]+0x676f02d9),14),$d);	# /* 31 */
-  $b=sum(rotate_left(sum(($c&$a)|($d&(~$a)),$b+$x[12]+0x8d2a4c8a),20),$c);	# /* 32 */
-  $a=sum(rotate_left(sum(($b^$c^$d),$a+$x[ 5]+0xfffa3942),4),$b);	# /* 33 */
-  $d=sum(rotate_left(sum(($a^$b^$c),$d+$x[ 8]+0x8771f681),11),$a);	# /* 34 */
-  $c=sum(rotate_left(sum(($d^$a^$b),$c+$x[11]+0x6d9d6122),16),$d);	# /* 35 */
-  $b=sum(rotate_left(sum(($c^$d^$a),$b+$x[14]+0xfde5380c),23),$c);	# /* 36 */
-  $a=sum(rotate_left(sum(($b^$c^$d),$a+$x[ 1]+0xa4beea44),4),$b);	# /* 37 */
-  $d=sum(rotate_left(sum(($a^$b^$c),$d+$x[ 4]+0x4bdecfa9),11),$a);	# /* 38 */
-  $c=sum(rotate_left(sum(($d^$a^$b),$c+$x[ 7]+0xf6bb4b60),16),$d);	# /* 39 */
-  $b=sum(rotate_left(sum(($c^$d^$a),$b+$x[10]+0xbebfbc70),23),$c);	# /* 40 */
-  $a=sum(rotate_left(sum(($b^$c^$d),$a+$x[13]+0x289b7ec6),4),$b);	# /* 41 */
-  $d=sum(rotate_left(sum(($a^$b^$c),$d+$x[ 0]+0xeaa127fa),11),$a);	# /* 42 */
-  $c=sum(rotate_left(sum(($d^$a^$b),$c+$x[ 3]+0xd4ef3085),16),$d);	# /* 43 */
-  $b=sum(rotate_left(sum(($c^$d^$a),$b+$x[ 6]+0x4881d05),23),$c);	# /* 44 */
-  $a=sum(rotate_left(sum(($b^$c^$d),$a+$x[ 9]+0xd9d4d039),4),$b);	# /* 45 */
-  $d=sum(rotate_left(sum(($a^$b^$c),$d+$x[12]+0xe6db99e5),11),$a);	# /* 46 */
-  $c=sum(rotate_left(sum(($d^$a^$b),$c+$x[15]+0x1fa27cf8),16),$d);	# /* 47 */
-  $b=sum(rotate_left(sum(($c^$d^$a),$b+$x[ 2]+0xc4ac5665),23),$c);	# /* 48 */
-  $a=sum(rotate_left(sum(($c^($b|(~$d)),$a+$x[ 0]+0xf4292244)),6),$b);	# /* 49 */
-  $d=sum(rotate_left(sum(($b^($a|(~$c)),$d+$x[ 7]+0x432aff97)),10),$a);	# /* 50 */
-  $c=sum(rotate_left(sum(($a^($d|(~$b)),$c+$x[14]+0xab9423a7)),15),$d);	# /* 51 */
-  $b=sum(rotate_left(sum(($d^($c|(~$a)),$b+$x[ 5]+0xfc93a039)),21),$c);	# /* 52 */
-  $a=sum(rotate_left(sum(($c^($b|(~$d)),$a+$x[12]+0x655b59c3)),6),$b);	# /* 53 */
-  $d=sum(rotate_left(sum(($b^($a|(~$c)),$d+$x[ 3]+0x8f0ccc92)),10),$a);	# /* 54 */
-  $c=sum(rotate_left(sum(($a^($d|(~$b)),$c+$x[10]+0xffeff47d)),15),$d);	# /* 55 */
-  $b=sum(rotate_left(sum(($d^($c|(~$a)),$b+$x[ 1]+0x85845dd1)),21),$c);	# /* 56 */
-  $a=sum(rotate_left(sum(($c^($b|(~$d)),$a+$x[ 8]+0x6fa87e4f)),6),$b);	# /* 57 */
-  $d=sum(rotate_left(sum(($b^($a|(~$c)),$d+$x[15]+0xfe2ce6e0)),10),$a);	# /* 58 */
-  $c=sum(rotate_left(sum(($a^($d|(~$b)),$c+$x[ 6]+0xa3014314)),15),$d);	# /* 59 */
-  $b=sum(rotate_left(sum(($d^($c|(~$a)),$b+$x[13]+0x4e0811a1)),21),$c);	# /* 60 */
-  $a=sum(rotate_left(sum(($c^($b|(~$d)),$a+$x[ 4]+0xf7537e82)),6),$b);	# /* 61 */
-  $d=sum(rotate_left(sum(($b^($a|(~$c)),$d+$x[11]+0xbd3af235)),10),$a);	# /* 62 */
-  $c=sum(rotate_left(sum(($a^($d|(~$b)),$c+$x[ 2]+0x2ad7d2bb)),15),$d);	# /* 63 */
-  $b=sum(rotate_left(sum(($d^($c|(~$a)),$b+$x[ 9]+0xeb86d391)),21),$c);	# /* 64 */
+  $a=&sum(&rotate_left(&sum(($b&$c)|(~$b&$d),$a+$x[ 0]+0xd76aa478),7),$b);	# /* 1 */
+  $d=&sum(&rotate_left(&sum(($a&$b)|(~$a&$c),$d+$x[ 1]+0xe8c7b756),12),$a);	# /* 2 */
+  $c=&sum(&rotate_left(&sum(($d&$a)|(~$d&$b),$c+$x[ 2]+0x242070db),17),$d);	# /* 3 */
+  $b=&sum(&rotate_left(&sum(($c&$d)|(~$c&$a),$b+$x[ 3]+0xc1bdceee),22),$c);	# /* 4 */
+  $a=&sum(&rotate_left(&sum(($b&$c)|(~$b&$d),$a+$x[ 4]+0xf57c0faf),7),$b);	# /* 5 */
+  $d=&sum(&rotate_left(&sum(($a&$b)|(~$a&$c),$d+$x[ 5]+0x4787c62a),12),$a);	# /* 6 */
+  $c=&sum(&rotate_left(&sum(($d&$a)|(~$d&$b),$c+$x[ 6]+0xa8304613),17),$d);	# /* 7 */
+  $b=&sum(&rotate_left(&sum(($c&$d)|(~$c&$a),$b+$x[ 7]+0xfd469501),22),$c);	# /* 8 */
+  $a=&sum(&rotate_left(&sum(($b&$c)|(~$b&$d),$a+$x[ 8]+0x698098d8),7),$b);	# /* 9 */
+  $d=&sum(&rotate_left(&sum(($a&$b)|(~$a&$c),$d+$x[ 9]+0x8b44f7af),12),$a);	# /* 10 */
+  $c=&sum(&rotate_left(&sum(($d&$a)|(~$d&$b),$c+$x[10]+0xffff5bb1),17),$d);	# /* 11 */
+  $b=&sum(&rotate_left(&sum(($c&$d)|(~$c&$a),$b+$x[11]+0x895cd7be),22),$c);	# /* 12 */
+  $a=&sum(&rotate_left(&sum(($b&$c)|(~$b&$d),$a+$x[12]+0x6b901122),7),$b);	# /* 13 */
+  $d=&sum(&rotate_left(&sum(($a&$b)|(~$a&$c),$d+$x[13]+0xfd987193),12),$a);	# /* 14 */
+  $c=&sum(&rotate_left(&sum(($d&$a)|(~$d&$b),$c+$x[14]+0xa679438e),17),$d);	# /* 15 */
+  $b=&sum(&rotate_left(&sum(($c&$d)|(~$c&$a),$b+$x[15]+0x49b40821),22),$c);	# /* 16 */ 
+  $a=&sum(&rotate_left(&sum(($b&$d)|($c&(~$d)),$a+$x[ 1]+0xf61e2562),5),$b);	# /* 17 */
+  $d=&sum(&rotate_left(&sum(($a&$c)|($b&(~$c)),$d+$x[ 6]+0xc040b340),9),$a);	# /* 18 */
+  $c=&sum(&rotate_left(&sum(($d&$b)|($a&(~$b)),$c+$x[11]+0x265e5a51),14),$d);	# /* 19 */
+  $b=&sum(&rotate_left(&sum(($c&$a)|($d&(~$a)),$b+$x[ 0]+0xe9b6c7aa),20),$c);	# /* 20 */
+  $a=&sum(&rotate_left(&sum(($b&$d)|($c&(~$d)),$a+$x[ 5]+0xd62f105d),5),$b);	# /* 21 */
+  $d=&sum(&rotate_left(&sum(($a&$c)|($b&(~$c)),$d+$x[10]+0x2441453),9),$a);	# /* 22 */
+  $c=&sum(&rotate_left(&sum(($d&$b)|($a&(~$b)),$c+$x[15]+0xd8a1e681),14),$d);	# /* 23 */
+  $b=&sum(&rotate_left(&sum(($c&$a)|($d&(~$a)),$b+$x[ 4]+0xe7d3fbc8),20),$c);	# /* 24 */
+  $a=&sum(&rotate_left(&sum(($b&$d)|($c&(~$d)),$a+$x[ 9]+0x21e1cde6),5),$b);	# /* 25 */
+  $d=&sum(&rotate_left(&sum(($a&$c)|($b&(~$c)),$d+$x[14]+0xc33707d6),9),$a);	# /* 26 */
+  $c=&sum(&rotate_left(&sum(($d&$b)|($a&(~$b)),$c+$x[ 3]+0xf4d50d87),14),$d);	# /* 27 */
+  $b=&sum(&rotate_left(&sum(($c&$a)|($d&(~$a)),$b+$x[ 8]+0x455a14ed),20),$c);	# /* 28 */
+  $a=&sum(&rotate_left(&sum(($b&$d)|($c&(~$d)),$a+$x[13]+0xa9e3e905),5),$b);	# /* 29 */
+  $d=&sum(&rotate_left(&sum(($a&$c)|($b&(~$c)),$d+$x[ 2]+0xfcefa3f8),9),$a);	# /* 30 */
+  $c=&sum(&rotate_left(&sum(($d&$b)|($a&(~$b)),$c+$x[ 7]+0x676f02d9),14),$d);	# /* 31 */
+  $b=&sum(&rotate_left(&sum(($c&$a)|($d&(~$a)),$b+$x[12]+0x8d2a4c8a),20),$c);	# /* 32 */
+  $a=&sum(&rotate_left(&sum(($b^$c^$d),$a+$x[ 5]+0xfffa3942),4),$b);	# /* 33 */
+  $d=&sum(&rotate_left(&sum(($a^$b^$c),$d+$x[ 8]+0x8771f681),11),$a);	# /* 34 */
+  $c=&sum(&rotate_left(&sum(($d^$a^$b),$c+$x[11]+0x6d9d6122),16),$d);	# /* 35 */
+  $b=&sum(&rotate_left(&sum(($c^$d^$a),$b+$x[14]+0xfde5380c),23),$c);	# /* 36 */
+  $a=&sum(&rotate_left(&sum(($b^$c^$d),$a+$x[ 1]+0xa4beea44),4),$b);	# /* 37 */
+  $d=&sum(&rotate_left(&sum(($a^$b^$c),$d+$x[ 4]+0x4bdecfa9),11),$a);	# /* 38 */
+  $c=&sum(&rotate_left(&sum(($d^$a^$b),$c+$x[ 7]+0xf6bb4b60),16),$d);	# /* 39 */
+  $b=&sum(&rotate_left(&sum(($c^$d^$a),$b+$x[10]+0xbebfbc70),23),$c);	# /* 40 */
+  $a=&sum(&rotate_left(&sum(($b^$c^$d),$a+$x[13]+0x289b7ec6),4),$b);	# /* 41 */
+  $d=&sum(&rotate_left(&sum(($a^$b^$c),$d+$x[ 0]+0xeaa127fa),11),$a);	# /* 42 */
+  $c=&sum(&rotate_left(&sum(($d^$a^$b),$c+$x[ 3]+0xd4ef3085),16),$d);	# /* 43 */
+  $b=&sum(&rotate_left(&sum(($c^$d^$a),$b+$x[ 6]+0x4881d05),23),$c);	# /* 44 */
+  $a=&sum(&rotate_left(&sum(($b^$c^$d),$a+$x[ 9]+0xd9d4d039),4),$b);	# /* 45 */
+  $d=&sum(&rotate_left(&sum(($a^$b^$c),$d+$x[12]+0xe6db99e5),11),$a);	# /* 46 */
+  $c=&sum(&rotate_left(&sum(($d^$a^$b),$c+$x[15]+0x1fa27cf8),16),$d);	# /* 47 */
+  $b=&sum(&rotate_left(&sum(($c^$d^$a),$b+$x[ 2]+0xc4ac5665),23),$c);	# /* 48 */
+  $a=&sum(&rotate_left(&sum(($c^($b|(~$d)),$a+$x[ 0]+0xf4292244)),6),$b);	# /* 49 */
+  $d=&sum(&rotate_left(&sum(($b^($a|(~$c)),$d+$x[ 7]+0x432aff97)),10),$a);	# /* 50 */
+  $c=&sum(&rotate_left(&sum(($a^($d|(~$b)),$c+$x[14]+0xab9423a7)),15),$d);	# /* 51 */
+  $b=&sum(&rotate_left(&sum(($d^($c|(~$a)),$b+$x[ 5]+0xfc93a039)),21),$c);	# /* 52 */
+  $a=&sum(&rotate_left(&sum(($c^($b|(~$d)),$a+$x[12]+0x655b59c3)),6),$b);	# /* 53 */
+  $d=&sum(&rotate_left(&sum(($b^($a|(~$c)),$d+$x[ 3]+0x8f0ccc92)),10),$a);	# /* 54 */
+  $c=&sum(&rotate_left(&sum(($a^($d|(~$b)),$c+$x[10]+0xffeff47d)),15),$d);	# /* 55 */
+  $b=&sum(&rotate_left(&sum(($d^($c|(~$a)),$b+$x[ 1]+0x85845dd1)),21),$c);	# /* 56 */
+  $a=&sum(&rotate_left(&sum(($c^($b|(~$d)),$a+$x[ 8]+0x6fa87e4f)),6),$b);	# /* 57 */
+  $d=&sum(&rotate_left(&sum(($b^($a|(~$c)),$d+$x[15]+0xfe2ce6e0)),10),$a);	# /* 58 */
+  $c=&sum(&rotate_left(&sum(($a^($d|(~$b)),$c+$x[ 6]+0xa3014314)),15),$d);	# /* 59 */
+  $b=&sum(&rotate_left(&sum(($d^($c|(~$a)),$b+$x[13]+0x4e0811a1)),21),$c);	# /* 60 */
+  $a=&sum(&rotate_left(&sum(($c^($b|(~$d)),$a+$x[ 4]+0xf7537e82)),6),$b);	# /* 61 */
+  $d=&sum(&rotate_left(&sum(($b^($a|(~$c)),$d+$x[11]+0xbd3af235)),10),$a);	# /* 62 */
+  $c=&sum(&rotate_left(&sum(($a^($d|(~$b)),$c+$x[ 2]+0x2ad7d2bb)),15),$d);	# /* 63 */
+  $b=&sum(&rotate_left(&sum(($d^($c|(~$a)),$b+$x[ 9]+0xeb86d391)),21),$c);	# /* 64 */
 
-  sum($state[0],$a), sum($state[1],$b), sum($state[2],$c), sum($state[3],$d);
+
+  &sum($state[0],$a), &sum($state[1],$b), &sum($state[2],$c), &sum($state[3],$d);
 }
 
 

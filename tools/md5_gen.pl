@@ -3,11 +3,19 @@
 use strict;
 
 my %f = (
-FF => 'X0=&sum(&rotate_left(&sum((X1&X2)|(~X1&X3),X0+X4+X6),X5),X1);',
-GG => 'X0=&sum(&rotate_left(&sum((X1&X3)|(X2&(~X3)),X0+X4+X6),X5),X1);',
-HH => 'X0=&sum(&rotate_left(&sum((X1^X2^X3),X0+X4+X6),X5),X1);',
-II => 'X0=&sum(&rotate_left(&sum((X2^(X1|(~X3)),X0+X4+X6)),X5),X1);'
+FF => 'X0=&sum(&rotate_left(((X1&X2)|(~X1&X3)+X0+X4+X6),X5),X1);',
+GG => 'X0=&sum(&rotate_left(((X1&X3)|(X2&(~X3))+X0+X4+X6),X5),X1);',
+HH => 'X0=&sum(&rotate_left(((X1^X2^X3)+X0+X4+X6),X5),X1);',
+II => 'X0=&sum(&rotate_left(((X2^(X1|(~X3))+X0+X4+X6)),X5),X1);'
 );
+
+#my %f = (
+#FF => 'X0=&sum(&rotate_left(&sum((X1&X2)|(~X1&X3),X0+X4+X6),X5),X1);',
+#GG => 'X0=&sum(&rotate_left(&sum((X1&X3)|(X2&(~X3)),X0+X4+X6),X5),X1);',
+#HH => 'X0=&sum(&rotate_left(&sum((X1^X2^X3),X0+X4+X6),X5),X1);',
+#II => 'X0=&sum(&rotate_left(&sum((X2^(X1|(~X3)),X0+X4+X6)),X5),X1);'
+#);
+
 
 my %s = (
 S11 => 7, S12 => 12, S13 => 17, S14 => 22, S21 => 5, S22 => 9, S23 => 14,
