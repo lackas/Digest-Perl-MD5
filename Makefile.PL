@@ -8,7 +8,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     'NAME'         => 'Digest::Perl::MD5',
-    'VERSION_FROM' => 'lib/Digest/Perl/MD5.pm', # finds $VERSION
+    'VERSION_FROM' => './lib/Digest/Perl/MD5.pm', # finds $VERSION
     'AUTHOR'       => 'Christian Lackas <delta@clackas.de>',
     'ABSTRACT'     => 'Perl Implementation of Rivest\'s MD5 algorithm',
     'PREREQ_PM'    => {
