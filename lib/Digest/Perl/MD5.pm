@@ -183,7 +183,8 @@ sub b64digest {
 sub md5(@) {
 	my $message = padding(join'',@_);
 	my ($a,$b,$c,$d) = (A,B,C,D);
-	for my $i (0 .. (length $message)/64-1) {
+	my $i;
+	for $i (0 .. (length $message)/64-1) {
 		my @X = unpack 'V16', substr($message,$i*64,64);	
 		($a,$b,$c,$d) = round($a,$b,$c,$d,@X);
 	}
