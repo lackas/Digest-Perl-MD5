@@ -313,6 +313,11 @@ checksum can also be calculated in OO style:
     
     print "Digest is $digest\n";
 
+The digest methods are destructive. That means you can only call them
+once and the $md5 objects is reset after use. You can make a copy with clone:
+
+	$md5->clone->hexdigest
+
 =head1 LIMITATIONS
 
 This implementation of the MD5 algorithm has some limitations:
@@ -321,18 +326,14 @@ This implementation of the MD5 algorithm has some limitations:
 
 =item
 
-It's slow, very slow. I've done my very best but Digest::MD5 is still about 135 times faster.
+It's slow, very slow. I've done my very best but Digest::MD5 is still about 100 times faster.
 You can only encrypt Data up to one million bytes in an acceptable time. But it's very usefull
 for encrypting small amounts of data like passwords.
 
 =item
 
-You can only encrypt up to 2^32 bits = 512 MB on 32bit archs. You should use C<Digest::MD5>
-for those amounts of data.
-
-=item
-
-C<Digest::Perl::MD5> loads all data to encrypt into memory. This is a todo.
+You can only encrypt up to 2^32 bits = 512 MB on 32bit archs. But You should
+use C<Digest::MD5> for those amounts of data anyway.
 
 =back
 
@@ -340,9 +341,11 @@ C<Digest::Perl::MD5> loads all data to encrypt into memory. This is a todo.
 
 L<Digest::MD5>
 
-L<md5sum(1)>
+L<md5(1)>
 
 RFC 1321
+
+tools/md5: a small BSD compatible md5 tool written in pure perl.
 
 =head1 COPYRIGHT
 
@@ -362,7 +365,7 @@ covered by the following copyright:
 
 =item
 
-Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All
+Copyright (C) 1991-1992, RSA Data Security, Inc. Created 1991. All
 rights reserved.
 
 License to copy and use this software is granted provided that it
@@ -392,14 +395,14 @@ licenses.
 =head1 AUTHORS
 
 The original MD5 interface was written by Neil Winton
-(C<N.Winton@axion.bt.co.uk>).
+(<N.Winton (at) axion.bt.co.uk>).
 
-C<Digest::MD5> was made by Gisle Aas <gisle@aas.no> (I took his Interface
+C<Digest::MD5> was made by Gisle Aas <gisle (at) aas.no> (I took his Interface
 and part of the documentation).
 
 Thanks to Guido Flohr for his 'use integer'-hint.
 
-This release was made by Christian Lackas <delta@clackas.de>.
+This release was made by Christian Lackas <delta (at) lackas.net>.
 
 =cut
 
