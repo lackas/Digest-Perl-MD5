@@ -73,6 +73,7 @@ sub gen_code {
         $1 = ((\$r << $3) | ((\$r >> (32 - $3))  & ((1 << $3) - 1))) + $4";
 	$insert .= "\t$c\n";
   }
+  close DATA;
   
   my $dump = '
   sub round {
