@@ -1,5 +1,11 @@
 #!/usr/bin/perl -w
 # $Id$
+
+# Compare results from Digest::Perl::MD5 with Digest::MD5
+# Press Ctrl-C to stop the test
+# prints 'ok' for every correct MD5 calculation and dies
+# if the results are different
+
 use strict;
 use lib qw'./lib ../lib';
 use Digest::Perl::MD5;

@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl -w
-
+# $Id$
 # Benchmark
 # compares Digest::Perl::MD5 and Digest::MD5
 
