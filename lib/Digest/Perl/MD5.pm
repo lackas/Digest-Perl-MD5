@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/local/bin/perl -w
 #$Id$
 
 require 5.004;
@@ -9,7 +9,7 @@ use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 @EXPORT_OK = qw(md5 md5_hex md5_base64);
 
 @ISA = 'Exporter';
-$VERSION = '1.1';
+$VERSION = '1.2';
 
 # I-Vektor
 use constant A => 0x67_45_23_01;
@@ -20,35 +20,51 @@ use constant D => 0x10_32_54_76;
 # for internal use
 use constant MAX  => 0xFFFFFFFF;
 
-
 # padd a message to a multiple of 64
 sub padding($) {
     my $msg = shift;    
-    $msg .= chr(128); # ein bit ganz links
+    $msg .= chr(128); # add one 1-bit
     my $l = length $msg;
-    $msg .= "\0" x ( ($l % 64 < 56 ? 56 : 120) - $l % 64 );
-    # this does not realy works, but no one really wants to encrypt more then 2^32 bits
-    # so it does not matter
+    $msg .= "\0" x (($l%64<=56?56:120)-$l%64);
     $l = ($l-1)*8;
-    $msg .= pack 'VV', $l & MAX , $l & 0x00000000;
+    $msg .= pack 'VV', $l & MAX , ($l >> 16 >> 16);
 }
 
 
 #    ROTATE_LEFT(x, n) (((x) << (n)) | ((x) >> (32-(n))))
 sub rotate_left($$) {
-	$_[0]<<$_[1]|$_[0]>>32-$_[1]
+	$_[0]<<$_[1]|$_[0]>>32-$_[1];
 }
 
-sub sum(@) {
+
+my $sum5_003=<<'EOC';
+sub sum {
 	$_[0] += $_[1];
 	while ($_[0] > MAX) {$_[0] -= MAX+1}
 	$_[0];  
+}
+EOC
+
+my $sum=<<'EOC';
+sub sum {
+	$_[0] += $_[1];
+	while ($_[0] > MAX) {$_[0] -= MAX+1}
+	while ($_[0] < 0) {$_[0] += MAX+1}
+	$_[0];  
+}
+EOC
+
+if ($] == 5.00503) {
+	eval $sum5_003;
+} else {
+	eval $sum
 }
 
 
 sub round($$$$@) {
   my @state;
   my ($a,$b,$c,$d) = (@state[0..3],my @x) = @_;
+  use integer;
 
   $a=sum(rotate_left(sum(($b&$c)|(~$b&$d),$a+$x[ 0]+0xd76aa478),7),$b);	# /* 1 */
   $d=sum(rotate_left(sum(($a&$b)|(~$a&$c),$d+$x[ 1]+0xe8c7b756),12),$a);	# /* 2 */
@@ -137,8 +153,7 @@ sub add(@) {
 }
 
 sub addfile {
-  	my $self = shift;
-	my $fh = shift;
+  	my ($self,$fh) = @_;
 	$self->{data} .= do{local$/;<$fh>};
 	$self
 }
@@ -181,11 +196,12 @@ sub encode_base64 ($) {
 	$res .= substr pack('u', $1), 1;
 	chop $res;
     }
-    $res =~ tr|` -_|AA-Za-z0-9+/|;               # `# help emacs
+    $res =~ tr|` -_|AA-Za-z0-9+/|;#`
     chop $res;chop $res;
     $res;
 }
 
+1;
 
 =head1 NAME
 
@@ -193,7 +209,7 @@ Digest::MD5::Perl - Perl implementation of Ron Rivests MD5 Algorithm
 
 =head1 DISCLAIMER
 
-This is B<not> an interface (like C<Digest::MD5>) but an Perl implementation of MD5.
+This is B<not> an interface (like C<Digest::MD5>) but a Perl implementation of MD5.
 It is written in perl only and because of this it is slow but it works without C-Code.
 You should use C<Digest::MD5> instead of this module if it is available.
 This module is only usefull for
@@ -206,11 +222,13 @@ computers where you cannot install C<Digest::MD5> (e.g. lack of a C-Compiler)
 
 =item
 
-encrypting only small amounts of data (less than one million bytes)
+encrypting only small amounts of data (less than one million bytes). I use it to
+hash passwords.
 
 =item
 
-educational purposes
+educational purposes (I optimized the code for performance (and now it is really ugly,
+but you find all needed function (F, G, H, I, FF, GG, HH, II, ...) at the end of the source-code).
 
 =back
 
@@ -317,7 +335,9 @@ RFC 1321
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
- Copyright 2000 Christian Lackas
+ Copyright 2000 Christian Lackas, Imperia Software Solutions
+ Copyright 1998-1999 Gisle Aas.
+ Copyright 1995-1996 Neil Winton.
  Copyright 1991-1992 RSA Data Security, Inc.
 
 The MD5 algorithm is defined in RFC 1321. The basic C code
@@ -376,7 +396,7 @@ This release was made by Christian Lackas <delta@clackas.de>.
 __END__
 
 
-# this is old code. Slow but readable
+# This is old code. Slow but readable.
 
 sub round($$$$@) {
   my @state;
