@@ -60,7 +60,7 @@ sub gen_code {
 	S43 => 15, S44 => 21
   );
 
-  my $insert = "";
+  my $insert = "\n";
   while(<DATA>) {
 	chomp;
 	next unless /^[FGHI]/;
@@ -68,11 +68,16 @@ sub gen_code {
 	my $c = $f{$func};
 	$c =~ s/X(\d)/$x[$1]/g;
 	$c =~ s/(S\d{2})/$s{$1}/;
-        $c =~ s/^(.*)=rotate_left\((.*),(.*)\)\+(.*)$//;
+	$c =~ s/^(.*)=rotate_left\((.*),(.*)\)\+(.*)$//;
+
+	my $su = 32 - $3;
+	my $sh = (1 << $3) - 1;
+
+	$c = "$1=(((\$r=$2)<<$3)|((\$r>>$su)&$sh))+$4";
 
 	#my $rotate = "(($2 << $3) || (($2 >> (32 - $3)) & (1 << $2) - 1)))"; 
-	$c = "\$r = $2;
-        $1 = ((\$r << $3) | ((\$r >> (32 - $3))  & ((1 << $3) - 1))) + $4";
+	# $c = "\$r = $2;
+	# $1 = ((\$r << $3) | ((\$r >> (32 - $3))  & ((1 << $3) - 1))) + $4";
 	$insert .= "\t$c\n";
   }
   close DATA;
@@ -80,15 +85,13 @@ sub gen_code {
   my $dump = '
   sub round {
 	my ($a,$b,$c,$d) = @_[0 .. 3];
-	my $r;
-
-	' . $insert . '
+	my $r;' . $insert . '
 	$_[0]+$a' . $MSK . ', $_[1]+$b ' . $MSK . 
         ', $_[2]+$c' . $MSK . ', $_[3]+$d' . $MSK . ';
   }';
   eval $dump;
-  #print "$dump\n";
-  #exit 0;
+  # print "$dump\n";
+  # exit 0;
 }
 
 gen_code();
