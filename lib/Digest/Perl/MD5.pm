@@ -338,9 +338,9 @@ The original MD5 interface was written by Neil Winton
 C<Digest::MD5> was made by Gisle Aas <gisle@aas.no> (I took his Interface
 and part of the documentation)
 
-This release was made by Christian Lackas <delta@clackas.de>.
-
 Thanks to Guido "NSA" Flohr for his 'use integer'-hint.
+
+This release was made by Christian Lackas <delta@clackas.de>.
 
 =cut
 
