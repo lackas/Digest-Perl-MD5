@@ -1,7 +1,6 @@
 1.6:	Reworked OOP Interface:
-	- added reset()
-	- add() and addfile() now don't just append to data,
-	  but save memory
+	- added reset() and clone() (to be compatible with Digest::MD5)
+	- add() and addfile() now save memory
 	- added more tests
 	- added tools/md5 (BSD compatible md5(1))
 	
