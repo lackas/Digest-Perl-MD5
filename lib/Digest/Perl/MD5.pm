@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 #$Id$
 
-require 5.004;
+#require 5.004;
 package Digest::Perl::MD5;
 use strict;
 use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
