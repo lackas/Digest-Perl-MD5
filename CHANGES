@@ -10,3 +10,6 @@
 	The module works as a fallback for Digest::MD5 now.
 	Replaced 'use constant' with inline functions.
 	
+1.4:	Removed obsolete sum() function (hint from Guido Flohr)
+	round() function is now dynamically generated,
+	different code for 32bit and 64bit architechtures.
