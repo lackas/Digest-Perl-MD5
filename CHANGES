@@ -1,15 +1,17 @@
-1.0:	Fix for big endian machines.
-	Performancetuning.
+1.4:	Removed obsolete sum() function (hint from Guido Flohr)
+	round() function is now dynamically generated,
+	different code for 32bit and 64bit architechtures.
+	Global 'use integer' (except for rotate_left()).
+	Faster than 1.3.	
 
-1.2:	Fixed a bug in the padding routine.
-	Different sum routines, so Perl 5.6.0
-	works now.
-	Using 'use integer'.
-	
 1.3:	Patch for the object interface from Gisle Aas.
 	The module works as a fallback for Digest::MD5 now.
 	Replaced 'use constant' with inline functions.
 	
-1.4:	Removed obsolete sum() function (hint from Guido Flohr)
-	round() function is now dynamically generated,
-	different code for 32bit and 64bit architechtures.
+1.2:	Fixed a bug in the padding routine.
+	Different sum routines, so Perl 5.6.0 works now.
+	Using 'use integer'.
+	
+1.0:	Fix for big endian machines.
+	Performancetuning.
+
