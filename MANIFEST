@@ -9,3 +9,4 @@ tools/md5	BSD compatible md5(1)
 CHANGES		What's new
 INSTALL		How to install
 rand.f		Random binary data for testing
+META.yml                                 Module meta-data (added by MakeMaker)
