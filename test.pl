@@ -103,7 +103,7 @@ if (1) {
 # 8 Speed-Test
 if (1) {
 	print "Speed-Test (please be patient)...\n";
-	my $count = 50_000;
+	my $count = $ENV{MD5_SPEED_TEST} || 50_000;
 	my $t1 = time;
 	for (1..$count) { md5('delta') } # encode 64Byte blocks
 	my $t2 = time;
