@@ -1,3 +1,10 @@
+1.6:	Reworked OOP Interface:
+	- added reset()
+	- add() and addfile() now don't just append to data,
+	  but save memory
+	- added more tests
+	- added tools/md5 (BSD compatible md5(1))
+	
 1.5:    Don't rely on (1 << 32) being 1 on 32 bit machines.
 	Get rid of ``no integer'' pragma and inline rotate left
 	function.

@@ -1,5 +1,7 @@
-#!/usr/local/bin/perl -w
-#$Id$
+#! /usr/bin/false
+#
+# $Id$
+#
 
 package Digest::Perl::MD5;
 use strict;
@@ -10,7 +12,7 @@ use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 @EXPORT_OK = qw(md5 md5_hex md5_base64);
 
 @ISA = 'Exporter';
-$VERSION = '1.5';
+$VERSION = '1.6';
 
 # I-Vektor
 sub A() { 0x67_45_23_01 }
@@ -22,7 +24,7 @@ sub D() { 0x10_32_54_76 }
 sub MAX() { 0xFFFFFFFF }
 
 # padd a message to a multiple of 64
-sub padding($) {
+sub padding {
     my $l = length (my $msg = shift() . chr(128));    
     $msg .= "\0" x (($l%64<=56?56:120)-$l%64);
     $l = ($l-1)*8;
@@ -91,22 +93,63 @@ sub gen_code {
 
 gen_code();
 
+#########################################
+# Private output converter functions:
+sub _encode_hex { unpack 'H*', $_[0] }
+sub _encode_base64 {
+	my $res;
+	while ($_[0] =~ /(.{1,45})/gs) {
+		$res .= substr pack('u', $1), 1;
+		chop $res;
+	}
+	$res =~ tr|` -_|AA-Za-z0-9+/|;#`
+	chop $res; chop $res;
+	$res
+}
 
-# object part of this module
+#########################################
+# OOP interface:
 sub new {
-	my $class = shift;
-	bless {}, ref($class) || $class;
+	my $proto = shift;
+	my $class = ref $proto || $proto;
+	my $self = {};
+	bless $self, $class;
+	$self->reset();
+	$self
 }
 
 sub reset {
 	my $self = shift;
-	delete $self->{data};
+	delete $self->{_data};
+	$self->{_state} = [A,B,C,D];
+	$self->{_length} = 0;
 	$self
 }
 
-sub add(@) {
+sub add {
 	my $self = shift;
-	$self->{data} .= join'', @_;
+	$self->{_data} .= join '', @_ if @_;
+	my ($i,$c);
+	for $i (0 .. (length $self->{_data})/64-1) {
+		my @X = unpack 'V16', substr $self->{_data}, $i*64, 64;
+		@{$self->{_state}} = round(@{$self->{_state}},@X);
+		++$c;
+	}
+	if ($c) {
+		substr $self->{_data}, 0, $c*64, '';
+		$self->{_length} += $c*64;
+	}
+	$self
+}
+
+sub finalize {
+	my $self = shift;
+	$self->{_data} .= chr(128);
+    my $l = $self->{_length} + length $self->{_data};
+    $self->{_data} .= "\0" x (($l%64<=56?56:120)-$l%64);
+    $l = ($l-1)*8;
+    $self->{_data} .= pack 'VV', $l & MAX , ($l >> 16 >> 16);
+	$self->add();
 	$self
 }
 
@@ -116,23 +159,46 @@ sub addfile {
 	    require Symbol;
 	    $fh = Symbol::qualify($fh, scalar caller);
 	}
-	$self->{data} .= do{local$/;<$fh>};
+	# $self->{_data} .= do{local$/;<$fh>};
+	my $read = 0;
+	my $buffer = '';
+	$self->add($buffer) while $read = read $fh, $buffer, 8192;
+	die __PACKAGE__, " read failed: $!" unless defined $read;
 	$self
 }
 
+sub add_bits {
+}
+
 sub digest {
-	md5(shift->{data})
+	my $self = shift;
+	$self->finalize();
+	my $res = pack 'V4', @{$self->{_state}};
+	$self->reset();
+	$res
 }
 
 sub hexdigest {
-	md5_hex(shift->{data})
+	_encode_hex($_[0]->digest)
 }
 
 sub b64digest {
-	md5_base64(shift->{data})
+	_encode_base64($_[0]->digest)
 }
 
-sub md5(@) {
+sub clone {
+	my $self = shift;
+	my $clone = { 
+		_state => [@{$self->{_state}}],
+		_length => $self->{_length},
+		_data => $self->{_data}
+	};
+	bless $clone, ref $self || $self;
+}
+
+#########################################
+# Procedural interface:
+sub md5 {
 	my $message = padding(join'',@_);
 	my ($a,$b,$c,$d) = (A,B,C,D);
 	my $i;
@@ -142,27 +208,9 @@ sub md5(@) {
 	}
 	pack 'V4',$a,$b,$c,$d;
 }
+sub md5_hex { _encode_hex &md5 } 
+sub md5_base64 { _encode_base64 &md5 }
 
-
-sub md5_hex(@) {  
-  unpack 'H*', &md5;
-}
-
-sub md5_base64(@) {
-  encode_base64(&md5);
-}
-
-
-sub encode_base64 ($) {
-    my $res;
-    while ($_[0] =~ /(.{1,45})/gs) {
-	$res .= substr pack('u', $1), 1;
-	chop $res;
-    }
-    $res =~ tr|` -_|AA-Za-z0-9+/|;#`
-    chop $res;chop $res;
-    $res;
-}
 
 1;
 
@@ -347,7 +395,7 @@ The original MD5 interface was written by Neil Winton
 (C<N.Winton@axion.bt.co.uk>).
 
 C<Digest::MD5> was made by Gisle Aas <gisle@aas.no> (I took his Interface
-and part of the documentation)
+and part of the documentation).
 
 Thanks to Guido Flohr for his 'use integer'-hint.
 
