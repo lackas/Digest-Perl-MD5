@@ -1,4 +1,5 @@
 1.0:	Fix for big endian machines.
+	Performancetuning.
 
 1.2:	Fixed a bug in the padding routine.
 	Different sum routines, so Perl 5.6.0
