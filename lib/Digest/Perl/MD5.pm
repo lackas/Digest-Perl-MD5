@@ -12,13 +12,18 @@ use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 $VERSION = '1.2';
 
 # I-Vektor
-use constant A => 0x67_45_23_01;
-use constant B => 0xef_cd_ab_89;
-use constant C => 0x98_ba_dc_fe;
-use constant D => 0x10_32_54_76;
+#use constant A => 0x67_45_23_01;
+#use constant B => 0xef_cd_ab_89;
+#use constant C => 0x98_ba_dc_fe;
+#use constant D => 0x10_32_54_76;
+sub A() { 0x67_45_23_01 }
+sub B() { 0xef_cd_ab_89 }
+sub C() { 0x98_ba_dc_fe }
+sub D() { 0x10_32_54_76 }
 
 # for internal use
-use constant MAX  => 0xFFFFFFFF;
+#use constant MAX  => 0xFFFFFFFF;
+sub MAX() { 0xFFFFFFFF }
 
 # padd a message to a multiple of 64
 sub padding($) {
@@ -176,7 +181,7 @@ sub b64digest {
 }
 
 sub md5(@) {
-	my $message = padding(join("", @_));
+	my $message = padding(join'',@_);
 	my ($a,$b,$c,$d) = (A,B,C,D);
 	for my $i (0 .. (length $message)/64-1) {
 		my @X = unpack 'V16', substr($message,$i*64,64);	
