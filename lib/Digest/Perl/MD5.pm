@@ -12,7 +12,7 @@ use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 @EXPORT_OK = qw(md5 md5_hex md5_base64);
 
 @ISA = 'Exporter';
-$VERSION = '1.6';
+$VERSION = '1.7';
 
 # I-Vektor
 sub A() { 0x67_45_23_01 }
