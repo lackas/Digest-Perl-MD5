@@ -39,11 +39,11 @@ $c->reset;
 open FILE, './lib/Digest/Perl/MD5.pm' or die $!;
 #print $c->addfile(*FILE)->hexdigest,"\n"; # DEBUG
 # 4 Object 2
-ok ( $c->addfile(*FILE)->hexdigest eq 'c935bf4b25f8fd8bc0ba3ef7fb6bc25b');
+ok ( $c->addfile(*FILE)->hexdigest eq 'd3efa01daaf0fccd8d7bdfdf9c7d9d6d');
 
 # 5 Speed-Test
 print "Speed-Test (be patient)...\n";
-my $count = 4000;
+my $count = 2000;
 my $t1 = time;
 for (1..$count) { md5('delta') } # encode 64Byte blocks
 my $t2 = time;

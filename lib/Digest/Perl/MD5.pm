@@ -1,6 +1,7 @@
 #!/usr/local/bin/perl
 #$Id$
 
+require 5.004;
 package Digest::Perl::MD5;
 use strict;
 use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
@@ -29,7 +30,7 @@ sub padding($) {
     # this does not realy works, but no one really wants to encrypt more then 2^32 bits
     # so it does not matter
     $l = ($l-1)*8;
-    $msg .= pack 'LL', $l & MAX , $l & 0x00000000;
+    $msg .= pack 'VV', $l & MAX , $l & 0x00000000;
 }
 
 
@@ -114,7 +115,6 @@ sub round($$$$@) {
   $c=sum(rotate_left(sum(($a^($d|(~$b)),$c+$x[ 2]+0x2ad7d2bb)),15),$d);	# /* 63 */
   $b=sum(rotate_left(sum(($d^($c|(~$a)),$b+$x[ 9]+0xeb86d391)),21),$c);	# /* 64 */
 
-
   sum($state[0],$a), sum($state[1],$b), sum($state[2],$c), sum($state[3],$d);
 }
 
@@ -159,10 +159,10 @@ sub md5($) {
 	my $message = padding(shift);
 	my ($a,$b,$c,$d) = (A,B,C,D);
 	for my $i (0 .. (length $message)/64-1) {
-		my @X = unpack 'L16', substr($message,$i*64,64);	
+		my @X = unpack 'V16', substr($message,$i*64,64);	
 		($a,$b,$c,$d) = round($a,$b,$c,$d,@X);
 	}
-	pack 'L4',$a,$b,$c,$d;    
+	pack 'V4',$a,$b,$c,$d;    
 }
 
 
@@ -187,6 +187,185 @@ sub encode_base64 ($) {
 }
 
 
+=head1 NAME
+
+Digest::MD5::Perl - Perl implementation of Ron Rivests MD5 Algorithm
+
+=head1 DISCLAIMER
+
+This is B<not> an interface (like C<Digest::MD5>) but an Perl implementation of MD5.
+It is written in perl only and because of this it is slow but it works without C-Code.
+You should use C<Digest::MD5> instead of this module if it is available.
+This module is only usefull for
+
+=over 4
+
+=item
+
+computers where you cannot install C<Digest::MD5> (e.g. lack of a C-Compiler)
+
+=item
+
+encrypting only small amounts of data (less than one million bytes)
+
+=item
+
+educational purposes
+
+=back
+
+=head1 SYNOPSIS
+
+ # Functional style
+ use Digest::MD5  qw(md5 md5_hex md5_base64);
+
+ $hash = md5 $data;
+ $hash = md5_hex $data;
+ $hash = md5_base64 $data;
+    
+
+ # OO style
+ use Digest::MD5;
+
+ $ctx = Digest::MD5->new;
+
+ $ctx->add($data);
+ $ctx->addfile(*FILE);
+
+ $digest = $ctx->digest;
+ $digest = $ctx->hexdigest;
+ $digest = $ctx->b64digest;
+
+=head1 DESCRIPTION
+
+This modules has the same interface as the much faster C<Digest::MD5>. So you can
+easily exchange them, e.g.
+
+	BEGIN {
+	  eval {
+	    require Digest::MD5;
+	    import Digest::MD5 'md5_hex'
+	  };
+	  if ($@) { # ups, no Digest::MD5
+	    require Digest::Perl::MD5;
+	    import Digest::Perl::MD5 'md5_hex'
+	  }		
+	}
+
+If the C<Digest::MD5> module is available it is used and if not you take
+C<Digest::Perl::MD5>.
+
+For a detailed Documentation see the C<Digest::MD5> module.
+
+=head1 EXAMPLES
+
+The simplest way to use this library is to import the md5_hex()
+function (or one of its cousins):
+
+    use Digest::Perl::MD5 'md5_hex';
+    print 'Digest is ', md5_hex 'foobarbaz', "\n";
+
+The above example would print out the message
+
+    Digest is 6df23dc03f9b54cc38a0fc1483df6e21
+
+provided that the implementation is working correctly.  The same
+checksum can also be calculated in OO style:
+
+    use Digest::MD5;
+    
+    $md5 = Digest::MD5->new;
+    $md5->add('foo', 'bar');
+    $md5->add('baz');
+    $digest = $md5->hexdigest;
+    
+    print "Digest is $digest\n";
+
+=head1 LIMITATIONS
+
+This implementation of the MD5 algorithm has some limitations:
+
+=over 4
+
+=item
+
+It's slow, very slow. I've done my very best but Digest::MD5 is still 1000 times faster.
+So you can only encrypt Data up to one million bytes in an acceptable time. It's usefull for
+encrypting short data like passwords.
+
+=item
+
+You can only encrypt up to 2^32 bits = 512 MB. You should use C<Digest::MD5> for those
+amounts of data.
+
+=item
+
+C<Digest::Perl::MD5> loads all data to encrypt into memory. This is a todo.
+
+=back
+
+=head1 SEE ALSO
+
+L<Digest::MD5>
+
+L<md5sum(1)>
+
+RFC 1321
+
+=head1 COPYRIGHT
+
+This library is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+ Copyright 2000 Christian Lackas
+ Copyright 1991-1992 RSA Data Security, Inc.
+
+The MD5 algorithm is defined in RFC 1321. The basic C code
+implementing the algorithm is derived from that in the RFC and is
+covered by the following copyright:
+
+=over 4
+
+=item
+
+Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All
+rights reserved.
+
+License to copy and use this software is granted provided that it
+is identified as the "RSA Data Security, Inc. MD5 Message-Digest
+Algorithm" in all material mentioning or referencing this software
+or this function.
+
+License is also granted to make and use derivative works provided
+that such works are identified as "derived from the RSA Data
+Security, Inc. MD5 Message-Digest Algorithm" in all material
+mentioning or referencing the derived work.
+
+RSA Data Security, Inc. makes no representations concerning either
+the merchantability of this software or the suitability of this
+software for any particular purpose. It is provided "as is"
+without express or implied warranty of any kind.
+
+These notices must be retained in any copies of any part of this
+documentation and/or software.
+
+=back
+
+This copyright does not prohibit distribution of any version of Perl
+containing this extension under the terms of the GNU or Artistic
+licenses.
+
+=head1 AUTHORS
+
+The original MD5 interface was written by Neil Winton
+(C<N.Winton@axion.bt.co.uk>).
+
+C<Digest::MD5> was made by Gisle Aas <gisle@aas.no> (I took his Interface
+and part of the documentation)
+
+This release was made by Christian Lackas <delta@clackas.de>.
+
+=cut
 
 
 
@@ -324,7 +503,7 @@ sub FF(\$$$$$$$) {
 }
 
 sub GG(\$$$$$$$) {
-#  my $Z = pack'L', $_[3];
+#  my $Z = pack'V', $_[3];
   ${$_[0]} = sum(rotate_left(sum(${$_[0]},
              sum(($_[1] & $_[3]) | ($_[2] & (~$_[3])),$_[4],$_[6])),$_[5]),$_[1]);
 }
