@@ -3,7 +3,7 @@ NAME
     Algorithm
 
 DISCLAIMER
-    This is not an interface (like `Digest::MD5') but an Perl
+    This is not an interface (like `Digest::MD5') but a Perl
     implementation of MD5. It is written in perl only and because of
     this it is slow but it works without C-Code. You should use
     `Digest::MD5' instead of this module if it is available. This
@@ -13,9 +13,12 @@ DISCLAIMER
         C-Compiler)
 
         encrypting only small amounts of data (less than one million
-        bytes)
+        bytes). I use it to hash passwords.
 
-        educational purposes
+        educational purposes (I optimized the code for performance (and
+        now it is really ugly, but you find all needed function (F,
+        G, H, I, FF, GG, HH, II, ...) at the end of the source-
+        code).
 
 SYNOPSIS
      # Functional style
@@ -105,7 +108,9 @@ COPYRIGHT
     This library is free software; you can redistribute it and/or
     modify it under the same terms as Perl itself.
 
-     Copyright 2000 Christian Lackas
+     Copyright 2000 Christian Lackas, Imperia Software Solutions
+     Copyright 1998-1999 Gisle Aas.
+     Copyright 1995-1996 Neil Winton.
      Copyright 1991-1992 RSA Data Security, Inc.
 
     The MD5 algorithm is defined in RFC 1321. The basic C code
