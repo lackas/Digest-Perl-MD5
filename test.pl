@@ -1,4 +1,5 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
+# $Id$
 
 use Test;
 use strict;
@@ -46,10 +47,10 @@ $c->add('XdeltaX');
 ok( $c->b64digest eq 'hLA/iI1q1iIKz+uffnsN6w' );
 $c->reset;
 
-open FILE, './lib/Digest/Perl/MD5.pm' or die $!;
+open FILE, './rand.f' or die $!;
 #print $c->addfile(*FILE)->hexdigest,"\n"; # DEBUG
 # 5 Object 2
-ok ( $c->addfile(*FILE)->hexdigest eq '4312bfa16663b8358c2a34b224db2eb6');
+ok ( $c->addfile(*FILE)->hexdigest eq '2cc2c8b037522964694985b3f9c88b1e');
 close FILE;
 
 # 6 Speed-Test
