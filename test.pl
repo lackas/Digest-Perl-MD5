@@ -56,7 +56,7 @@ close FILE;
 
 # 6 Speed-Test
 print "Speed-Test (please be patient)...\n";
-my $count = 10_000;
+my $count = 50_000;
 my $t1 = time;
 for (1..$count) { md5('delta') } # encode 64Byte blocks
 my $t2 = time;
