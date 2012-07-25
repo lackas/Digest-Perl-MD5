@@ -1,11 +1,22 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Digest-Perl-MD5
+abstract: Pure Perl implementation of MD5
+author:
+    - Christian Lackas <delta@cpan.org>
 version:      1.8
 version_from: ./lib/Digest/Perl/MD5.pm
 installdirs:  site
 requires:
     Exporter:                      0
-
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17
+meta-spec:
+    version: 1.4
+    url: http://module-build.sourceforge.net/META-spec-v1.4.html
+resources:
+    homepage: https://metacpan.org/module/Digest::Perl::MD5
+    repository: 
+        url: https://github.com/lackas/Digest-Perl-MD5.git
+        web: https://github.com/lackas/Digest-Perl-MD5
+        type: git
