@@ -1,8 +1,3 @@
-#! /usr/bin/false
-#
-# $Id$
-#
-
 package Digest::Perl::MD5;
 use strict;
 use integer;
