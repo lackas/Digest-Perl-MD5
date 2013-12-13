@@ -12,7 +12,7 @@ use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 @EXPORT_OK = qw(md5 md5_hex md5_base64);
 
 @ISA = 'Exporter';
-$VERSION = '1.8';
+$VERSION = '1.9';
 
 # I-Vektor
 sub A() { 0x67_45_23_01 }
@@ -61,10 +61,10 @@ sub gen_code {
   );
 
   my $insert = "\n";
-  while(<DATA>) {
-	chomp;
-	next unless /^[FGHI]/;
-	my ($func,@x) = split /,/;
+  while(defined( my $data = <DATA> )) {
+	chomp $data;
+	next unless $data =~ /^[FGHI]/;
+	my ($func,@x) = split /,/, $data;
 	my $c = $f{$func};
 	$c =~ s/X(\d)/$x[$1]/g;
 	$c =~ s/(S\d{2})/$s{$1}/;
