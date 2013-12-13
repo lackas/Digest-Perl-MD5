@@ -23,7 +23,7 @@ sub D() { 0x10_32_54_76 }
 # for internal use
 sub MAX() { 0xFFFFFFFF }
 
-# padd a message to a multiple of 64
+# pad a message to a multiple of 64
 sub padding {
     my $l = length (my $msg = shift() . chr(128));    
     $msg .= "\0" x (($l%64<=56?56:120)-$l%64);
@@ -231,7 +231,7 @@ Digest::MD5::Perl - Perl implementation of Ron Rivests MD5 Algorithm
 This is B<not> an interface (like C<Digest::MD5>) but a Perl implementation of MD5.
 It is written in perl only and because of this it is slow but it works without C-Code.
 You should use C<Digest::MD5> instead of this module if it is available.
-This module is only usefull for
+This module is only useful for
 
 =over 4
 
@@ -335,7 +335,7 @@ This implementation of the MD5 algorithm has some limitations:
 =item
 
 It's slow, very slow. I've done my very best but Digest::MD5 is still about 100 times faster.
-You can only encrypt Data up to one million bytes in an acceptable time. But it's very usefull
+You can only encrypt Data up to one million bytes in an acceptable time. But it's very useful
 for encrypting small amounts of data like passwords.
 
 =item
