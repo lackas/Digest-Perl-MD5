@@ -7,7 +7,7 @@ use vars qw($VERSION @ISA @EXPORTER @EXPORT_OK);
 @EXPORT_OK = qw(md5 md5_hex md5_base64);
 
 @ISA = 'Exporter';
-$VERSION = '1.9';
+$VERSION = '1.91';
 
 # I-Vektor
 sub A() { 0x67_45_23_01 }
@@ -40,11 +40,12 @@ sub gen_code {
   my $MSK = ((1 << 16) << 16) ? ' & ' . MAX : '';
 #	FF => "X0=rotate_left(((X1&X2)|(~X1&X3))+X0+X4+X6$MSK,X5)+X1$MSK;",
 #	GG => "X0=rotate_left(((X1&X3)|(X2&(~X3)))+X0+X4+X6$MSK,X5)+X1$MSK;",
+  # Only mask before rotate, not after; final mask in round() return
   my %f = (
-	FF => "X0=rotate_left((X3^(X1&(X2^X3)))+X0+X4+X6$MSK,X5)+X1$MSK;",
-	GG => "X0=rotate_left((X2^(X3&(X1^X2)))+X0+X4+X6$MSK,X5)+X1$MSK;",
-	HH => "X0=rotate_left((X1^X2^X3)+X0+X4+X6$MSK,X5)+X1$MSK;",
-	II => "X0=rotate_left((X2^(X1|(~X3)))+X0+X4+X6$MSK,X5)+X1$MSK;",
+	FF => "X0=rotate_left((X3^(X1&(X2^X3)))+X0+X4+X6$MSK,X5)+X1;",
+	GG => "X0=rotate_left((X2^(X3&(X1^X2)))+X0+X4+X6$MSK,X5)+X1;",
+	HH => "X0=rotate_left((X1^X2^X3)+X0+X4+X6$MSK,X5)+X1;",
+	II => "X0=rotate_left((X2^(X1|(~X3)))+X0+X4+X6$MSK,X5)+X1;",
   );
   #unless ( (1 << 16) << 16) { %f = %{$CODES{'32bit'}} }
   #else { %f = %{$CODES{'64bit'}} }
@@ -81,8 +82,8 @@ sub gen_code {
   sub round {
 	my ($a,$b,$c,$d) = @_[0 .. 3];
 	my $r;' . $insert . '
-	$_[0]+$a' . $MSK . ', $_[1]+$b ' . $MSK . 
-        ', $_[2]+$c' . $MSK . ', $_[3]+$d' . $MSK . ';
+	($_[0]+$a)' . $MSK . ', ($_[1]+$b)' . $MSK .
+        ', ($_[2]+$c)' . $MSK . ', ($_[3]+$d)' . $MSK . ';
   }';
   eval $dump;
   # print "$dump\n";
