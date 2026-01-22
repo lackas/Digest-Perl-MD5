@@ -219,7 +219,7 @@ sub md5_base64 { _encode_base64 &md5 }
 
 =head1 NAME
 
-Digest::MD5::Perl - Perl implementation of Ron Rivests MD5 Algorithm
+Digest::MD5::Perl - Perl implementation of Ron Rivest's MD5 Algorithm
 
 =head1 DISCLAIMER
 
@@ -236,7 +236,7 @@ computers where you cannot install C<Digest::MD5> (e.g. lack of a C-Compiler)
 
 =item
 
-encrypting only small amounts of data (less than one million bytes). I use it to
+hashing only small amounts of data (less than one million bytes). I use it to
 hash passwords.
 
 =item
@@ -269,7 +269,7 @@ educational purposes
 
 =head1 DESCRIPTION
 
-This modules has the same interface as the much faster C<Digest::MD5>. So you can
+This module has the same interface as the much faster C<Digest::MD5>. So you can
 easily exchange them, e.g.
 
 	BEGIN {
@@ -277,7 +277,7 @@ easily exchange them, e.g.
 	    require Digest::MD5;
 	    import Digest::MD5 'md5_hex'
 	  };
-	  if ($@) { # ups, no Digest::MD5
+	  if ($@) { # oops, no Digest::MD5
 	    require Digest::Perl::MD5;
 	    import Digest::Perl::MD5 'md5_hex'
 	  }		
@@ -290,7 +290,7 @@ You can also install the Perl part of Digest::MD5 together with Digest::Perl::MD
 and use Digest::MD5 as normal, it falls back to Digest::Perl::MD5 if it
 cannot load its object files.
 
-For a detailed Documentation see the C<Digest::MD5> module.
+For detailed documentation see the C<Digest::MD5> module.
 
 =head1 EXAMPLES
 
@@ -317,7 +317,7 @@ checksum can also be calculated in OO style:
     print "Digest is $digest\n";
 
 The digest methods are destructive. That means you can only call them
-once and the $md5 objects is reset after use. You can make a copy with clone:
+once and the $md5 object is reset after use. You can make a copy with clone:
 
 	$md5->clone->hexdigest
 
@@ -330,12 +330,12 @@ This implementation of the MD5 algorithm has some limitations:
 =item
 
 It's slow, very slow. I've done my very best but Digest::MD5 is still about 100 times faster.
-You can only encrypt Data up to one million bytes in an acceptable time. But it's very useful
-for encrypting small amounts of data like passwords.
+You can only hash data up to one million bytes in an acceptable time. But it's very useful
+for hashing small amounts of data like passwords.
 
 =item
 
-You can only encrypt up to 2^32 bits = 512 MB on 32bit archs. But You should
+You can only hash up to 2^32 bits = 512 MB on 32-bit archs. But you should
 use C<Digest::MD5> for those amounts of data anyway.
 
 =back

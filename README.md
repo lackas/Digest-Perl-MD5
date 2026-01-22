@@ -1,19 +1,19 @@
 NAME
-    Digest::MD5::Perl - Perl implementation of Ron Rivests MD5 Algorithm
+    Digest::MD5::Perl - Perl implementation of Ron Rivest's MD5 Algorithm
 
 DISCLAIMER
     This is not an interface (like "Digest::MD5") but a Perl implementation
     of MD5. It is written in perl only and because of this it is slow but it
     works without C-Code. You should use "Digest::MD5" instead of this
-    module if it is available. This module is only usefull for
+    module if it is available. This module is only useful for
 
-        computers where you cannot install "Digest::MD5" (e.g. lack of a
+    *   computers where you cannot install "Digest::MD5" (e.g. lack of a
         C-Compiler)
 
-        encrypting only small amounts of data (less than one million bytes).
-        I use it to hash passwords.
+    *   hashing only small amounts of data (less than one million bytes). I
+        use it to hash passwords.
 
-        educational purposes
+    *   educational purposes
 
 SYNOPSIS
      # Functional style
@@ -23,6 +23,7 @@ SYNOPSIS
      $hash = md5_hex $data;
      $hash = md5_base64 $data;
     
+
      # OO style
      use Digest::MD5;
 
@@ -36,7 +37,7 @@ SYNOPSIS
      $digest = $ctx->b64digest;
 
 DESCRIPTION
-    This modules has the same interface as the much faster "Digest::MD5". So
+    This module has the same interface as the much faster "Digest::MD5". So
     you can easily exchange them, e.g.
 
             BEGIN {
@@ -44,7 +45,7 @@ DESCRIPTION
                 require Digest::MD5;
                 import Digest::MD5 'md5_hex'
               };
-              if ($@) { # ups, no Digest::MD5
+              if ($@) { # oops, no Digest::MD5
                 require Digest::Perl::MD5;
                 import Digest::Perl::MD5 'md5_hex'
               }             
@@ -57,7 +58,7 @@ DESCRIPTION
     Digest::Perl::MD5 and use Digest::MD5 as normal, it falls back to
     Digest::Perl::MD5 if it cannot load its object files.
 
-    For a detailed Documentation see the "Digest::MD5" module.
+    For detailed documentation see the "Digest::MD5" module.
 
 EXAMPLES
     The simplest way to use this library is to import the md5_hex() function
@@ -83,7 +84,7 @@ EXAMPLES
         print "Digest is $digest\n";
 
     The digest methods are destructive. That means you can only call them
-    once and the $md5 objects is reset after use. You can make a copy with
+    once and the $md5 object is reset after use. You can make a copy with
     clone:
 
             $md5->clone->hexdigest
@@ -91,18 +92,18 @@ EXAMPLES
 LIMITATIONS
     This implementation of the MD5 algorithm has some limitations:
 
-        It's slow, very slow. I've done my very best but Digest::MD5 is
-        still about 100 times faster. You can only encrypt Data up to one
-        million bytes in an acceptable time. But it's very usefull for
-        encrypting small amounts of data like passwords.
+    *   It's slow, very slow. I've done my very best but Digest::MD5 is
+        still about 100 times faster. You can only hash data up to one
+        million bytes in an acceptable time. But it's very useful for
+        hashing small amounts of data like passwords.
 
-        You can only encrypt up to 2^32 bits = 512 MB on 32bit archs. But
-        You should use "Digest::MD5" for those amounts of data anyway.
+    *   You can only hash up to 2^32 bits = 512 MB on 32-bit archs. But you
+        should use "Digest::MD5" for those amounts of data anyway.
 
 SEE ALSO
-    the Digest::MD5 manpage
+    Digest::MD5
 
-    the md5(1) manpage
+    md5(1)
 
     RFC 1321
 
@@ -121,7 +122,7 @@ COPYRIGHT
     the algorithm is derived from that in the RFC and is covered by the
     following copyright:
 
-        Copyright (C) 1991-1992, RSA Data Security, Inc. Created 1991. All
+    *   Copyright (C) 1991-1992, RSA Data Security, Inc. Created 1991. All
         rights reserved.
 
         License to copy and use this software is granted provided that it is
