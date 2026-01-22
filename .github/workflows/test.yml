@@ -31,16 +31,16 @@ jobs:
   test-32bit:
     runs-on: ubuntu-latest
     name: Perl 32-bit
+    container:
+      image: i386/debian:bullseye
     steps:
       - uses: actions/checkout@v4
-      - name: Test on 32-bit
-        uses: uraimo/run-on-arch-action@v2
-        with:
-          arch: i386
-          distro: bullseye
-          run: |
-            apt-get update
-            apt-get install -y perl make
-            perl Makefile.PL
-            make
-            make test
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y perl make
+      - name: Build and test
+        run: |
+          perl Makefile.PL
+          make
+          make test
