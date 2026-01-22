@@ -1,0 +1,27 @@
+name: Perltidy
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  perltidy:
+    runs-on: ubuntu-latest
+    name: Check formatting
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.38'
+      - name: Install perltidy
+        run: cpanm --notest Perl::Tidy
+      - name: Check formatting
+        run: |
+          perltidy -b lib/Digest/Perl/MD5.pm
+          if ! git diff --exit-code lib/Digest/Perl/MD5.pm; then
+            echo "Code is not properly formatted. Run 'perltidy -b lib/Digest/Perl/MD5.pm' locally."
+            exit 1
+          fi
