@@ -31,16 +31,16 @@ jobs:
   test-32bit:
     runs-on: ubuntu-latest
     name: Perl 32-bit
-    container:
-      image: i386/debian:bullseye
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/386
+      - name: Test in 32-bit container
         run: |
-          apt-get update
-          apt-get install -y perl make
-      - name: Build and test
-        run: |
-          perl Makefile.PL
-          make
-          make test
+          docker run --rm --platform linux/386 \
+            -v "${{ github.workspace }}:/work" \
+            -w /work \
+            i386/debian:bullseye \
+            sh -c "apt-get update && apt-get install -y perl make && perl Makefile.PL && make && make test"
